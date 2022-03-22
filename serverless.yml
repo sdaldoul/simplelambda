@@ -1,0 +1,28 @@
+service: simple-aws-lambda
+
+provider:
+  name: aws
+  runtime: java11
+  region: eu-west-3
+  timeout: 8
+  memorySize: 960
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - ses:*
+      Resource:
+        - "*"
+
+
+package:
+  artifact: target/JAVA_AWS_EMAIL.jar
+
+functions:
+  simpleLambda:
+    handler: org.example.SimpleLambda
+    events:
+      - schedule: rate(1 minute)
+    environment:
+      INLI_URL: https://www.inli.fr/locations/offres/hauts-de-seine_d:92/?price_min=750&price_max=930&area_min=0&area_max=200&room_min=2&room_max=5&bedroom_min=1&bedroom_max=2&lat=&lng=&zoom=&radius=
+      TO_EMAIL: recipient@example.com
+      FROM_EMAIL: sender@example.com
